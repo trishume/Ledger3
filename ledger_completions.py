@@ -1,5 +1,5 @@
 import sublime_plugin
-# import sublime
+import sublime
 # import re
 import datetime
 from Ledger3.ledger_support import selectors, list_accounts, list_payees, guess_date_format, \
@@ -17,11 +17,13 @@ class LedgerCompletions(sublime_plugin.EventListener):
         # before the cursor
         # print('START')
         if view.match_selector(locations[0] - 1, selectors['account']):
-            return self.complete_account(view)
+            completions = self.complete_account(view)
         elif view.match_selector(locations[0] - 1, selectors['payee']):
-            return self.complete_payee(view)
+            completions = self.complete_payee(view)
         else:
-            return self.complete_misc(view)
+            completions = self.complete_misc(view)
+
+        return (completions, sublime.INHIBIT_WORD_COMPLETIONS)
 
     def complete_account(self, view):
         accounts = list_accounts(view)
